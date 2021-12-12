@@ -1,15 +1,33 @@
 {
   "name": "objection-next-generator",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
   "author": "lrlineroa",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "start:ts": "node -r ts-node/register -r tsconfig-paths/register -r esm ./src/index.ts",
+    "start": "yarn rm:generated && tsc && node -r ts-node/register -r tsconfig-paths/register ./dist/index.js",
+    "rm:models": "rimraf generated/models/*",
+    "rm:generated": "rimraf generated/models/* & rimraf generated/http_requests/* & rimraf generated/@types/* & rimraf generated/api/*"
+  },
   "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
+    "@types/lodash": "^4.14.177",
+    "@types/mustache": "^4.1.2",
+    "@types/node": "^16.11.10",
+    "mustache": "^4.2.0",
+    "reverse-mustache": "^1.9.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "tslib": "^2.3.1",
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "pluralize": "^8.0.0"
   }
 }

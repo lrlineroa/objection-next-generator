@@ -1,1 +1,7 @@
 ﻿node_modules
+generated/models/
+generated/@types/
+generated/http_requests/
+generated/api/
+dist/
+migrations/

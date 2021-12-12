@@ -1,0 +1,24 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import DAO from "@components/db/DAO";
+import {{model_name}} from "@database/models/{{model_file_name}}";
+import { applyCors } from "@utils"
+export default async (
+    req: NextApiRequest,
+    res: NextApiResponse
+) => {
+    await applyCors(req, res);
+    switch (req.method) {
+        case 'POST':
+            await DAO.insert({{model_name}},req.body,res);
+            break;
+
+        case 'GET':
+            await DAO.read({{model_name}},res);
+            break;
+        default:
+            break;
+    }
+}
+
+
+

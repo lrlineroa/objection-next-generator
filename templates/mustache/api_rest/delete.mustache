@@ -1,0 +1,18 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import DAO from "@components/db/DAO";
+import {{model_name}} from "@database/models/{{model_file_name}}";
+import { applyCors } from "@utils"
+export default async (
+    req: NextApiRequest,
+    res: NextApiResponse
+) => {
+    await applyCors(req, res);
+    const {id}=req.query;
+    switch (req.method) {
+        case 'GET':
+            await DAO.delete({{model_name}},id,'Género eliminado correctamente',res);
+            break;
+         default:
+            break;
+    }
+}

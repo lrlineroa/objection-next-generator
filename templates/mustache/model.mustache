@@ -1,0 +1,49 @@
+const { Model } = require("objection");
+const BaseModel = require("./baseModel");
+/**
+ * {{table_name}} model
+ * @extends Model
+ */
+module.exports = class {{model_name}} extends BaseModel {
+
+    /**
+     * @override
+     */
+    static get tableName() {
+        return '{{table_name}}';
+    }
+    static get relationMappings() {
+        {{#relation_mappings}}
+        const {{related_model_name}} = require("./{{related_model_file_name}}");
+        {{/relation_mappings}}
+        return {
+                {{#relation_mappings}}
+                {{relation_name}}: {
+                    relation: Model.{{relation_type}},
+                    modelClass: {{related_model_name}},
+                    join: {
+                        from: '{{table_name}}.{{from}}',
+                        to: '{{to}}'
+                    }
+                },
+                {{/relation_mappings}}
+                }  
+    }     
+    static get jsonSchema() {
+        return {
+            type: 'object',
+            required: [
+                {{#json_schema.required_properties}}
+                    '{{.}}',
+                {{/json_schema.required_properties}}
+            ],
+            properties: {
+                {{#json_schema.properties}}
+                    {{column_name}}:{
+                        type: '{{column_type}}',
+                    },
+                {{/json_schema.properties}}
+            }
+        };
+    }
+}  

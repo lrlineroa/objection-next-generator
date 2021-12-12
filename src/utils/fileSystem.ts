@@ -70,7 +70,7 @@ export const saveGenerateApiRest = (
     locationArray.push(dataOfFile.folderName);
   }
   return saveFileContents(
-    [...locationArray, table_name],
+    [...locationArray],
     dataOfFile.fileName,
     content
   );

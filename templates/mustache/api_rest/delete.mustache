@@ -10,7 +10,7 @@ export default async (
     const {id}=req.query;
     switch (req.method) {
         case 'GET':
-            await DAO.delete({{model_name}},id,'Género eliminado correctamente',res);
+            await DAO.delete({{model_name}},id,res);
             break;
          default:
             break;

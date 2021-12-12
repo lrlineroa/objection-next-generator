@@ -10,7 +10,7 @@ export default async (
     const {id}=req.query;
     switch (req.method) {
         case 'POST':
-            await DAO.update({{model_name}},id,req.body,'Género actualizado correctamente',res);
+            await DAO.update({{model_name}},id,req.body,res);
             break;
          default:
             break;

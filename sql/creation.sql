@@ -28,6 +28,7 @@ CREATE TABLE `login` (
   `phone_number` string,
   `` timestamps,
   PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
   KEY `REQ` (`user_id`, `email`, `digest_password`, `phone_number`),
   KEY `UNIQ` (`user_id`, `email`)
 );

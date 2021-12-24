@@ -2,7 +2,6 @@
   "models": [
     {
       "table_name": "",
-      "model_name": "",
       "timestamps":true,
       "properties": [
         {

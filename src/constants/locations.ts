@@ -1,5 +1,6 @@
 export const migrations_location = ["..", "..", "migrations"];
 export const templates_locations = ["..", "..", "templates", "mustache"];
+export const sql_location = ["..", "..", "sql"];
 export const templates_locations_partials = [
   "..",
   "..",
@@ -26,6 +27,12 @@ export const generated_models_location=[
     "..",
     "generated",
     "models",
+]
+export const generated_data_model_location=[
+  "..",
+  "..",
+  "generated",
+  "data_model",
 ]
 export const generated_types_location=[
     "..",

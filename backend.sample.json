@@ -1,0 +1,22 @@
+{
+  "models": [
+    {
+      "table_name": "",
+      "model_name": "",
+      "timestamps":true,
+      "properties": [
+        {
+          "column_name": "",
+          "column_type": "",
+          "primary": false,
+          "foreign": {
+            "table_name": "",
+            "column_name": ""
+          },
+          "required": true,
+          "unique": false
+        }
+      ]
+    }
+  ]
+}

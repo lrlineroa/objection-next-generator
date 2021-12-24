@@ -10,6 +10,7 @@
     "start": "yarn rm:generated && tsc && node -r ts-node/register -r tsconfig-paths/register ./dist/index.js",
     "rm:models": "rimraf generated/models/*",
     "rm:generated": "rimraf generated/models/* & rimraf generated/http_requests/* & rimraf generated/@types/* & rimraf generated/api/*"
+    
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",

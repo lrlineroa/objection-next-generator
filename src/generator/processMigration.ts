@@ -56,8 +56,8 @@ export const getDataForTypes = (fileNames: string[]): TypesType => {
           column_name:
             `${property.column_name}${
               _.includes(json_schema.required_properties, property.column_name)
-                ? "?"
-                : ""
+                ? ""
+                : "?"
             }` || "",
           column_type: property.column_type || "",
         };

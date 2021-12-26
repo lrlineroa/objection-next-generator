@@ -54,7 +54,8 @@ for (let modelToKnex of dataModel.models) {
   let model_name = getModelName(modelToKnex.table_name);
   let model_file_name = getModelFileName(modelToKnex.table_name);
   let json_schema: JSONSchemaType = getJSONSchemaFromModel(
-    modelToKnex.properties
+    modelToKnex.properties,
+    modelToKnex.timestamps
   );
   let relation_mappings: RelationMappingType[] =
     getRelationMappingsFromModel(modelToKnex);

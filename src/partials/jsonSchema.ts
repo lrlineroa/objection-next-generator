@@ -41,9 +41,9 @@ export const getJSONSchema = (content: string): JSONSchemaType => {
   }
   return { properties, required_properties };
 };
-
 export const getJSONSchemaFromModel = (
-  properties: PropertyType[]
+  properties: PropertyType[],
+  withTimestamps: boolean = false
 ): JSONSchemaType => {
   const required_properties: string[] = properties
     .filter((property) => property.required)
@@ -56,5 +56,9 @@ export const getJSONSchemaFromModel = (
       };
     }
   );
+  if(withTimestamps){
+    properties_json_schema.push({ column_name: "created_at", column_type: "string" });
+    properties_json_schema.push({ column_name: "updated_at", column_type: "string" });
+  }
   return { properties: properties_json_schema, required_properties };
 };

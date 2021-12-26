@@ -1,3 +1,4 @@
+import { ModelType, PropertyType } from "src/@types/datamodel";
 import { getPartialReverseTemplate } from "@utils/fileSystem";
 import {
   getModelFileName,
@@ -14,6 +15,7 @@ import {
   getColumnAndReferencesDefinitionContent,
   getReferencesColumnDefinitions,
 } from "./columnsDefinition";
+import { property } from "lodash";
 
 const reverseMustache = require("reverse-mustache");
 export const getRelationMappings = (content: string): RelationMappingType[] => {
@@ -41,7 +43,7 @@ export const getRelationMappings = (content: string): RelationMappingType[] => {
     const { table_name, primary_key } = reversedReference;
     const { column_name } = reversedColumn;
     const related_model_name = getModelName(table_name);
-    let relation_type = "BelongsToOneRelation";
+    const relation_type = "BelongsToOneRelation";
     const relation_name = getRelationName(table_name, relation_type);
     const from = column_name;
     const to = `${table_name}.${primary_key}`;
@@ -57,4 +59,33 @@ export const getRelationMappings = (content: string): RelationMappingType[] => {
     relations_mappings.push(relation_mapping);
   }
   return relations_mappings;
+};
+
+export const getRelationMappingsFromModel = (
+  model: ModelType
+): RelationMappingType[] => {
+  const properties = model.properties;
+  const relation_mappings: RelationMappingType[] = [];
+  const foreingProperties = properties.filter((property) => property.foreign);
+  for (let fkProperty of foreingProperties) {
+    const pk_table_name: string = fkProperty.foreign?.table!;
+    const pk_column_name = fkProperty.foreign?.column;
+    const column_name = fkProperty.column_name;
+    const related_model_name = getModelName(pk_table_name);
+    const relation_type = "BelongsToOneRelation";
+    const is_auto_reference = pk_table_name !== model.table_name;
+    const relation_name = getRelationName(pk_table_name || "", relation_type);
+    const from = `${model.table_name}.${column_name}`;
+    const to: string = `${pk_table_name}.${pk_column_name}`;
+    const related_model_file_name = getModelFileName(pk_table_name);
+    relation_mappings.push({
+      relation_name,
+      from,
+      to,
+      relation_type,
+      related_model_name: related_model_name || "",
+      related_model_file_name: related_model_file_name || ""
+    });
+  }
+  return relation_mappings;
 };

@@ -1,0 +1,18 @@
+import { Knex } from "knex";
+
+export async function up(knex: Knex): Promise<void> {
+    return knex.schema.createTable('{{table_name}}', (table:Knex.TableBuilder) => {
+        {{#properties}}
+        table.{{column_type}}('{{column_name}}'){{#primary}}.primary(){{/primary}}{{#unique}}.unique(){{/unique}}{{#required}}.notNullable(){{/required}}{{#foreign}}.references('{{table}}.{{column}}'){{/foreign}};
+        {{/properties}}
+        {{#timestamps}}
+        table.timestamps();
+        {{/timestamps}}
+    });
+}
+
+
+export async function down(knex: Knex): Promise<void> {
+    return knex.schema.dropTableIfExists('{{table_name}}');
+}
+

@@ -14,7 +14,9 @@ module.exports = class {{model_name}} extends BaseModel {
     }
     static get relationMappings() {
         {{#relation_mappings}}
+        {{^is_auto_reference}}
         const {{related_model_name}} = require("./{{related_model_file_name}}");
+        {{/is_auto_reference}}
         {{/relation_mappings}}
         return {
                 {{#relation_mappings}}
@@ -22,7 +24,7 @@ module.exports = class {{model_name}} extends BaseModel {
                     relation: Model.{{relation_type}},
                     modelClass: {{related_model_name}},
                     join: {
-                        from: '{{table_name}}.{{from}}',
+                        from: '{{from}}',
                         to: '{{to}}'
                     }
                 },

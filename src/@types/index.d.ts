@@ -18,12 +18,20 @@ export type JSONSchemaPropertyType = {
 
 export type RelationMappingType = {
   relation_name: string;
-  relation_type: string;
+  relation_type:
+    | "BelongsToOneRelation"
+    | "HasOneRelation"
+    | "HasManyRelation"
+    | "ManyToManyRelation"
+    | "HasOneThroughRelation";
   related_model_name: string;
   related_model_file_name: string;
   from: string;
   through?: RelationMappingThroughType;
   to: string;
+  pk_table_name?:string;
+  is_auto_reference?: boolean;
+
 };
 
 export type RelationMappingThroughType = {
@@ -67,8 +75,16 @@ export type HttpRequestType = {
   listColumns: () => string;
 };
 
-export type DataOfFileType ={
-  templateName:string;
-  fileName:string;
-  folderName?:string;
-}
+export type DataOfFileType = {
+  templateName: string;
+  fileName: string;
+  folderName?: string;
+};
+
+export type InversedRelationMappingType = RelationMappingType & {
+  model_to_edit: string;
+};
+
+export type KnexModelsType = {
+  models: ModelType[];
+};

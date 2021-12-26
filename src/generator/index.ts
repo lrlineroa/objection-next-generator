@@ -2,10 +2,12 @@ import Mustache from "mustache";
 import { getTableName } from "@partials/tableNameStatement";
 import { getModelFileName, getModelName } from "@utils/helpers";
 import {
+  getFileContents,
   getMigrationContent,
   getPartialReverseTemplate,
   getTemplate,
   saveGenerateApiRest,
+  saveGeneratedMigration,
   saveGenerateHttpRequests,
   saveGenerateModel,
   saveGenerateTypes,
@@ -13,14 +15,17 @@ import {
 import {
   DataOfFileType,
   HttpRequestType,
+  KnexModelsType,
   ModelType,
   TypesType,
 } from "src/@types";
+import { ModelType as ModelTypeOfDataModel } from "src/@types/datamodel";
 import {
   getDataForHttpRequests,
   getDataForModel,
   getDataForTypes,
 } from "./processMigration";
+import { generated_knex_models_location } from "src/constants/locations";
 export const generateModelFromMigration = (fileName: string): void => {
   let model_template = getTemplate("model.mustache");
   let data: ModelType = getDataForModel(fileName);
@@ -36,30 +41,10 @@ export const generateTypesFromMigrations = (fileNames: string[]): void => {
   saveGenerateTypes(`index.d.ts`, generatedTypesContent);
 };
 
-export const generateHttpRequestsFromMigrations = (fileName: string): void => {
-  let data: HttpRequestType = getDataForHttpRequests(fileName);
-
-  let dataOfFiles: DataOfFileType[] = [
-    { templateName: "create_http.mustache", fileName: "create.http" },
-    { templateName: "read_http.mustache", fileName: "read.http" },
-    { templateName: "read_one_http.mustache", fileName: "read_one.http" },
-    { templateName: "edit_http.mustache", fileName: "edit.http" },
-    { templateName: "delete_http.mustache", fileName: "delete.http" },
-  ];
-  for (let dataFile of dataOfFiles) {
-    let template = getTemplate(dataFile.templateName);
-    let generatedContent = Mustache.render(template, data);
-    saveGenerateHttpRequests(
-      dataFile.fileName,
-      data.table_name,
-      generatedContent
-    );
-  }
-};
 
 export const generateApiRestFromMigration = (fileName: string): void => {
   let data: ModelType = getDataForModel(fileName);
-  let dataOfFiles : DataOfFileType[] = [
+  let dataOfFiles: DataOfFileType[] = [
     { templateName: "api_rest/create_and_read.mustache", fileName: "index.ts" },
     {
       templateName: "api_rest/edit.mustache",
@@ -77,5 +62,49 @@ export const generateApiRestFromMigration = (fileName: string): void => {
     let template = getTemplate(dataFile.templateName);
     let generatedContent = Mustache.render(template, data);
     saveGenerateApiRest(dataFile, data.table_name, generatedContent);
+  }
+};
+
+export const generateMigrationFromSQLModel = (model: ModelTypeOfDataModel) => {
+  let template = getTemplate("migration.mustache");
+  let generatedContent = Mustache.render(template, model);
+  saveGeneratedMigration(
+    `${new Date().getTime()}_create_${model.table_name}.ts`,
+    generatedContent
+  );
+};
+
+export const generateModelsFromKnexModels = (
+  knexModels: KnexModelsType
+): void => {
+  let model_template = getTemplate("model.mustache");
+  for (let model of knexModels.models) {
+    let generatedModelContent: string = Mustache.render(model_template, model);
+    saveGenerateModel(`${model.model_file_name}.ts`, generatedModelContent);
+  }
+};
+
+export const generateHttpRequestsFromKnexModels = (
+  knexModels: KnexModelsType
+): void => {
+  for (let model of knexModels.models) {
+    let data: HttpRequestType = getDataForHttpRequests(model);
+
+    let dataOfFiles: DataOfFileType[] = [
+      { templateName: "create_http.mustache", fileName: "create.http" },
+      { templateName: "read_http.mustache", fileName: "read.http" },
+      { templateName: "read_one_http.mustache", fileName: "read_one.http" },
+      { templateName: "edit_http.mustache", fileName: "edit.http" },
+      { templateName: "delete_http.mustache", fileName: "delete.http" },
+    ];
+    for (let dataFile of dataOfFiles) {
+      let template = getTemplate(dataFile.templateName);
+      let generatedContent = Mustache.render(template, data);
+      saveGenerateHttpRequests(
+        dataFile.fileName,
+        data.table_name,
+        generatedContent
+      );
+    }
   }
 };

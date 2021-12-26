@@ -1,28 +1,38 @@
-import { DataModelType } from "src/@types/datamodel";
-import { getFilesFromMigrations, saveGeneratedDataModel } from "@utils/fileSystem";
+import { DataModelType, ModelType } from "src/@types/datamodel";
+import {
+  getFileContents,
+  getFilesFromMigrations,
+  saveGeneratedDataModel,
+} from "@utils/fileSystem";
 import { getDataModel } from "./datamodel";
 import {
   generateApiRestFromMigration,
-  generateHttpRequestsFromMigrations,
+  generateHttpRequestsFromKnexModels,
+  generateMigrationFromSQLModel,
   generateModelFromMigration,
+  generateModelsFromKnexModels,
   generateTypesFromMigrations,
 } from "./generator";
+import { KnexModelsType } from "src/@types";
+import { generated_knex_models_location } from "./constants/locations";
 
 // //read the migration file from the disk
 // const migrationFiles = getFilesFromMigrations();
 // for (let fileName of migrationFiles) {
-//   try {
-//     generateModelFromMigration(fileName);
-//   } catch (error) {
-//     console.log("error at generationModels: " + fileName);
-//     console.log(error);
-//   }
-//   try {
-//     generateHttpRequestsFromMigrations(fileName);
-//   } catch (error) {
-//     console.log("error at generation Http requests: " + fileName);
-//     console.log(error);
-//   }
+let knexModels: KnexModelsType = JSON.parse(
+  getFileContents(generated_knex_models_location, "knex_models.json")
+);
+try {
+  generateModelsFromKnexModels(knexModels);
+} catch (error: unknown) {
+  console.error(error);
+}
+try {
+  generateHttpRequestsFromKnexModels(knexModels);
+} catch (error: unknown) {
+  console.error(error);
+}
+
 //   try {
 //     generateApiRestFromMigration(fileName);
 //   } catch (error) {
@@ -37,7 +47,3 @@ import {
 //   console.log("error : at generating Types");
 //   console.log(error);
 // }
-
-let dataModel:DataModelType=getDataModel();
-
-saveGeneratedDataModel('data_model.json', JSON.stringify(dataModel, null, 4));

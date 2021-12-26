@@ -69,9 +69,9 @@ export const getDataForTypes = (fileNames: string[]): TypesType => {
   return data;
 };
 
-export const getDataForHttpRequests = (fileName: string): HttpRequestType => {
+export const getDataForHttpRequests = (model:ModelType): HttpRequestType => {
   const data: HttpRequestType = {
-    table_name: "",
+    table_name: model.table_name,
     columns: [],
     local_host: "{{local_host}}",
     remote_host: "{{remote_host}}",
@@ -84,11 +84,7 @@ export const getDataForHttpRequests = (fileName: string): HttpRequestType => {
       return result;
     },
   };
-  let migrationFile = getMigrationContent(fileName);
-  migrationFile = migrationFile.replace(trim_all_spaces_regex, "");
-  const table_name = getTableName(migrationFile);
-  data.table_name = table_name;
-  let json_schema: JSONSchemaType = getJSONSchema(migrationFile);
+  let json_schema: JSONSchemaType = model.json_schema!;
   if (json_schema.properties)
     for (let property of json_schema.properties) {
       let column: ReversedColumnType = {

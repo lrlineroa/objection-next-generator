@@ -151,7 +151,6 @@ CREATE TABLE `census_persons` (
   `doc_type_id` integer,
   `first_name` string,
   `last_name` string,
-  `Field` Type,
   `family_id` integer,
   `bith_date` date,
   `relationship_id` integer,
@@ -173,8 +172,7 @@ CREATE TABLE `census_persons` (
   FOREIGN KEY (`doc_type_id`) REFERENCES `doc_types`(`id`),
   FOREIGN KEY (`census_id`) REFERENCES `census`(`id`),
   KEY `REQ` (`census_id`, `doc`, `doc_type_id`, `first_name`, `bith_date`, `relationship_id`, `gender_id`, `marital_status_id`, `profession_id`, `education_level_id`, `adress_id`, `phone_number`),
-  KEY `UNIQ` (`doc`),
-  KEY `Key` (`last_name`, `Field`)
+  KEY `UNIQ` (`doc`)
 );
 
 CREATE TABLE `information_categories` (
@@ -243,7 +241,7 @@ CREATE TABLE `agreements` (
   `responsible` text,
   `budget` decimal(13,2),
   `compliance_date` date,
-  `advance` number,
+  `advance` integer,
   `milestones` text,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`proceeding_id`) REFERENCES `proceedings`(`id`),

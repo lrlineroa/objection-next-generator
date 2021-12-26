@@ -5,6 +5,7 @@ import {
   generated_api_rest_location,
   generated_data_model_location,
   generated_http_requests_location,
+  generated_knex_models_location,
   generated_models_location,
   generated_types_location,
   migrations_location,
@@ -60,6 +61,9 @@ export const saveGenerateTypes = (fileName: string, content: string) => {
 export const saveGeneratedDataModel = (fileName: string, content: string) => {
   return saveFileContents(generated_data_model_location, fileName, content);
 };
+export const saveGeneratedKnexModels= (fileName: string, content: string) => {
+  return saveFileContents(generated_knex_models_location, fileName, content);
+}
 export const saveGenerateHttpRequests = (
   fileName: string,
   table_name: string,
@@ -90,4 +94,9 @@ export const getFilesFromMigrations = () => {
 
 export const getSQLFileContent = () => {
   return getFileContents(sql_location, "creation.sql");
+};
+
+
+export const saveGeneratedMigration = (fileName: string, content: string) => {
+  return saveFileContents(migrations_location, fileName, content);
 };

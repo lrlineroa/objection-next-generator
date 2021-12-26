@@ -2,6 +2,9 @@
 generated/models/
 generated/@types/
 generated/http_requests/
+generated/migrations/
 generated/api/
+generated/data_model/
+generated/knex_models/
 dist/
 migrations/

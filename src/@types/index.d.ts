@@ -30,8 +30,6 @@ export type RelationMappingType = {
   through?: RelationMappingThroughType;
   to: string;
   pk_table_name?:string;
-  is_auto_reference?: boolean;
-
 };
 
 export type RelationMappingThroughType = {

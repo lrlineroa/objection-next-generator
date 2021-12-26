@@ -73,7 +73,6 @@ export const getRelationMappingsFromModel = (
     const column_name = fkProperty.column_name;
     const related_model_name = getModelName(pk_table_name);
     const relation_type = "BelongsToOneRelation";
-    const is_auto_reference = pk_table_name !== model.table_name;
     const relation_name = getRelationName(pk_table_name || "", relation_type);
     const from = `${model.table_name}.${column_name}`;
     const to: string = `${pk_table_name}.${pk_column_name}`;

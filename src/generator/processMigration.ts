@@ -13,6 +13,7 @@ import {
   ColumnType,
   HttpRequestType,
   JSONSchemaType,
+  KnexModelsType,
   ModelType,
   ReversedColumnType,
   TypesType,
@@ -36,16 +37,13 @@ export const getDataForModel = (fileName: string): ModelType => {
   };
 };
 
-export const getDataForTypes = (fileNames: string[]): TypesType => {
+export const getDataForTypes = (knexModels: KnexModelsType): TypesType => {
   const data: TypesType = {
     types: [],
   };
-  for (let fileName of fileNames) {
-    let migrationFile = getMigrationContent(fileName);
-    migrationFile = migrationFile.replace(trim_all_spaces_regex, "");
-    const table_name = getTableName(migrationFile);
-    let model_name = getModelName(table_name);
-    let json_schema: JSONSchemaType = getJSONSchema(migrationFile);
+  for (let model of knexModels.models) {
+    let model_name = model.model_name;
+    let json_schema: JSONSchemaType = model.json_schema!;
     let type: TypeType = {
       related_model_name: model_name || "",
       columns: [],
@@ -69,7 +67,7 @@ export const getDataForTypes = (fileNames: string[]): TypesType => {
   return data;
 };
 
-export const getDataForHttpRequests = (model:ModelType): HttpRequestType => {
+export const getDataForHttpRequests = (model: ModelType): HttpRequestType => {
   const data: HttpRequestType = {
     table_name: model.table_name,
     columns: [],
@@ -78,8 +76,9 @@ export const getDataForHttpRequests = (model:ModelType): HttpRequestType => {
     listColumns: function () {
       var result = "";
       for (var i = 0; i < this.columns.length; i++) {
-        result +=
-          `\"${this.columns[i].column_name}\" : \"\"${(i !== this.columns.length - 1 ? ", \n\t" : "")}`;
+        result += `\"${this.columns[i].column_name}\" : \"\"${
+          i !== this.columns.length - 1 ? ", \n\t" : ""
+        }`;
       }
       return result;
     },

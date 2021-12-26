@@ -12,6 +12,7 @@ import {
   generateModelFromMigration,
   generateModelsFromKnexModels,
   generateTypesFromMigrations,
+  generatetApiRestFromKnexModels,
 } from "./generator";
 import { KnexModelsType } from "src/@types";
 import { generated_knex_models_location } from "./constants/locations";
@@ -32,7 +33,16 @@ try {
 } catch (error: unknown) {
   console.error(error);
 }
-
+try {
+  generatetApiRestFromKnexModels(knexModels);
+} catch (error: unknown) {
+  console.error(error);
+}
+try {
+  generateTypesFromKnexModels(knexModels);
+} catch (error: unknown) {
+  console.error(error);
+}
 //   try {
 //     generateApiRestFromMigration(fileName);
 //   } catch (error) {

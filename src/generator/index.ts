@@ -1,10 +1,5 @@
 import Mustache from "mustache";
-import { getTableName } from "@partials/tableNameStatement";
-import { getModelFileName, getModelName } from "@utils/helpers";
 import {
-  getFileContents,
-  getMigrationContent,
-  getPartialReverseTemplate,
   getTemplate,
   saveGenerateApiRest,
   saveGeneratedMigration,
@@ -25,20 +20,12 @@ import {
   getDataForModel,
   getDataForTypes,
 } from "./processMigration";
-import { generated_knex_models_location } from "src/constants/locations";
 export const generateModelFromMigration = (fileName: string): void => {
   let model_template = getTemplate("model.mustache");
   let data: ModelType = getDataForModel(fileName);
   let generatedModelContent: string = Mustache.render(model_template, data);
 
   saveGenerateModel(`${data.model_file_name}.ts`, generatedModelContent);
-};
-
-export const generateTypesFromMigrations = (fileNames: string[]): void => {
-  let types_model = getTemplate("types.mustache");
-  let data: TypesType = getDataForTypes(fileNames);
-  let generatedTypesContent: string = Mustache.render(types_model, data);
-  saveGenerateTypes(`index.d.ts`, generatedTypesContent);
 };
 
 
@@ -78,6 +65,9 @@ export const generateModelsFromKnexModels = (
   knexModels: KnexModelsType
 ): void => {
   let model_template = getTemplate("model.mustache");
+  let base_model_template = getTemplate("baseModel.mustache");
+  let generatedBaseModelContent = Mustache.render(base_model_template, {});
+  saveGenerateModel(`baseModel.ts`, generatedBaseModelContent);
   for (let model of knexModels.models) {
     let generatedModelContent: string = Mustache.render(model_template, model);
     saveGenerateModel(`${model.model_file_name}.ts`, generatedModelContent);
@@ -107,4 +97,40 @@ export const generateHttpRequestsFromKnexModels = (
       );
     }
   }
+};
+
+export const generatetApiRestFromKnexModels = (
+  knexModels: KnexModelsType
+): void => {
+  for (let model of knexModels.models) {
+    let dataOfFiles: DataOfFileType[] = [
+      {
+        templateName: "api_rest/create_and_read.mustache",
+        fileName: "index.ts",
+      },
+      {
+        templateName: "api_rest/edit.mustache",
+        folderName: "[id]",
+        fileName: "edit.ts",
+      },
+      {
+        templateName: "api_rest/delete.mustache",
+        folderName: "[id]",
+        fileName: "delete.ts",
+      },
+      { templateName: "api_rest/read_one.mustache", fileName: "[id].ts" },
+    ];
+    for (let dataFile of dataOfFiles) {
+      let template = getTemplate(dataFile.templateName);
+      let generatedContent = Mustache.render(template, model);
+      saveGenerateApiRest(dataFile, model.table_name, generatedContent);
+    }
+  }
+};
+
+export const generateTypesFromKnexModels = (knexModels: KnexModelsType): void => {
+  let types_model = getTemplate("types.mustache");
+  let data: TypesType = getDataForTypes(knexModels);
+  let generatedTypesContent: string = Mustache.render(types_model, data);
+  saveGenerateTypes(`index.d.ts`, generatedTypesContent);
 };

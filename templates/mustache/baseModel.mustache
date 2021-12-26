@@ -1,0 +1,6 @@
+const {Model} =require('objection');
+Model.knex(require('../knex'));
+class BaseModel extends Model{
+}
+
+module.exports=BaseModel;
